@@ -13,7 +13,19 @@ const booksControllers = (Book) => {
 
   const get = (req, res) => {
     const { query } = req;
-    Book.find(query, (err, books) => (err ? res.send(err) : res.json(books)));
+    Book.find(query, (err, books) => {
+      if (err) {
+        return res.send(err);
+      }
+      const returnbooks = books.map(book => {
+        const newBook = book.toJSON();
+        newBook.links = {};
+        newBook.links.self = `http://${req.headers.host}/api/books/${book._id}`;
+        return newBook;
+      });
+
+      return res.json(returnbooks);
+    });
   };
 
   return { post, get };
