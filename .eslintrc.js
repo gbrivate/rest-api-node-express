@@ -17,11 +17,11 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
-    "comma-dangle": 0,
-    "import/newline-after-import": 0,
-    "padded-blocks": 0,
-    "arrow-parens": 0,
-    "func-names": 0,
-    "no-underscore-dangle": 0
+    'comma-dangle': 0,
+    'import/newline-after-import': 0,
+    'padded-blocks': 0,
+    'arrow-parens': 0,
+    'func-names': 0,
+    'no-underscore-dangle': 0,
   },
 };

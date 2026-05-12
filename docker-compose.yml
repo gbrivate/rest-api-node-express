@@ -1,0 +1,27 @@
+services:
+  mongo:
+    image: mongo:6
+    container_name: bookapi_mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: bookapi_api
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    environment:
+      PORT: 3000
+      MONGO_URL: mongodb://mongo:27017/bookAPI
+    ports:
+      - "4000:3000"
+
+volumes:
+  mongo_data:
+

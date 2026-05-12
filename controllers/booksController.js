@@ -1,23 +1,26 @@
 const booksControllers = (Book) => {
-  const post = (req, res) => {
+  const post = async (req, res) => {
     const book = new Book(req.body);
     if (!req.body.title) {
       res.status(400);
       return res.send('Title is required');
     }
 
-    book.save();
-    res.status(201);
-    return res.json(book);
+    try {
+      await book.save();
+      res.status(201);
+      res.set('Location', `/api/books/${book._id}`);
+      return res.json(book);
+    } catch (err) {
+      return res.status(500).send(err);
+    }
   };
 
-  const get = (req, res) => {
+  const get = async (req, res) => {
     const { query } = req;
-    Book.find(query, (err, books) => {
-      if (err) {
-        return res.send(err);
-      }
-      const returnbooks = books.map(book => {
+    try {
+      const books = await Book.find(query);
+      const returnbooks = books.map((book) => {
         const newBook = book.toJSON();
         newBook.links = {};
         newBook.links.self = `http://${req.headers.host}/api/books/${book._id}`;
@@ -25,7 +28,9 @@ const booksControllers = (Book) => {
       });
 
       return res.json(returnbooks);
-    });
+    } catch (err) {
+      return res.status(500).send(err);
+    }
   };
 
   return { post, get };
